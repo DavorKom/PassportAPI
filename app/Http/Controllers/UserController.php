@@ -9,17 +9,12 @@ use App\Http\Resources\UserResource;
 use App\Mail\UsersExportMail;
 use Barryvdh\DomPDF\Facade as PDF;
 use App\Exports\UsersExport;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Jobs\SendUsersExport;
 
 class UserController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-    }
-
     public function mail(Request $request)
     {
         $user = auth()->user();
@@ -58,10 +53,7 @@ class UserController extends Controller
 
         $csv = (new UsersExport($users))->store("$filename.xlsx", 'local');
 
-        Mail::to($user->email)->send(new UsersExportMail($filename));
-
-        Storage::delete("$filename.pdf");
-        Storage::delete("$filename.xlsx");
+        dispatch(new SendUsersExport($filename));
 
         if(Cache::get($user->id)) {
             $value = Cache::get($user->id);
