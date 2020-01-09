@@ -17,13 +17,13 @@ class UsersTableSeeder extends Seeder
         $faker = Faker::create();
 
     	foreach (range(1,100) as $index) {
-            $contract_start_date = dateTimeBetween($startDate = '-10 years', $endDate = 'now', $timezone = null);
+            $contract_start_date = $faker->dateTimeBetween($startDate = '-10 years', $endDate = 'now', $timezone = null);
 	        DB::table('users')->insert([
                 'name' => $faker->name,
                 'email' => $faker->email,
                 'password' => bcrypt("password$index"), // $faker->password
                 'contract_start_date' => $contract_start_date,
-                'contract_end_date' =>  dateTimeBetween($startDate = $contract_start_date, $endDate = '+5 years', $timezone = null),
+                'contract_end_date' =>  $faker->dateTimeBetween($startDate = $contract_start_date, $endDate = '+5 years', $timezone = null),
                 'type' => $faker->randomElement(['normal', 'premium']),
                 'verified' => $faker->randomElement([0, 1]),
                 'created_at' => $faker->dateTime,

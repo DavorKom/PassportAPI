@@ -21,4 +21,5 @@ Route::post('/register', 'AuthController@register');
 Route::post('/login', 'AuthController@login');
 Route::post('/logout', 'AuthController@logout');
 Route::get('/user', 'AuthController@user')->name('user');
-Route::get('/export', 'UserController@export')->name('export');
+Route::get('/export/download', 'UserController@download')->name('export.download');
+Route::get('/export/mail', 'UserController@mail')->name('export.mail');

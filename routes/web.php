@@ -14,3 +14,6 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/export/download', 'UserController@download')->name('export.download');
+Route::get('/export/mail', 'UserController@mail')->name('export.mail');

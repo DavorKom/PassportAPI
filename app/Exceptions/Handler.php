@@ -80,12 +80,12 @@ class Handler extends ExceptionHandler
             $status = $exception->status;
             $validation_errors = $exception->errors();
 
-            foreach($validation_errors as $key => $messsages) {
-                $errors[] = [
+            $errors = array_map(function($value, $key) {
+                return [
                     'key' => $key,
-                    'messages' => $messsages
+                    'message' => $value[0]
                 ];
-            }
+            }, $validation_errors, array_keys($validation_errors));
         }
 
         $response = $this->exceptionTamplate($request, $exception, $status, $errors);
@@ -96,5 +96,12 @@ class Handler extends ExceptionHandler
     protected function invalid($request, $exception)
     {
         return $this->invalidJson($request, $exception);
+    }
+
+    protected function unauthenticated($request, $exception)
+    {
+        $response = $this->exceptionTamplate($request, $exception, 401);
+
+        return response()->json($response, 401);
     }
 }
